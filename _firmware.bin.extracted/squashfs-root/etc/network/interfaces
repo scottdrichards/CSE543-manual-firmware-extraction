@@ -1,0 +1,16 @@
+# /etc/network/interfaces -- configuration file for ifup(8), ifdown(8)
+
+# The loopback interface
+auto lo ath0
+iface lo inet loopback
+
+# Wired interfaces
+# (development only, don't background dhcp)
+iface eth1 inet dhcp
+        udhcpc_opts -nS
+        hostname HarmonyHub
+
+# Wireless interfaces
+iface ath0 inet dhcp
+        udhcpc_opts -bS -t5 -T2 -A20
+        hostname HarmonyHub

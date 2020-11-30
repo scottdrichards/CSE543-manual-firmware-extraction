@@ -1,0 +1,8 @@
+{
+	"package": "qivicon",
+	"displayName": "Qivicon",
+	"productId": "2003",
+	"version": "1.2.3",
+	"installer": "update.sh",
+	"plugin": "tasks/automation/plugins/qivicon"
+}

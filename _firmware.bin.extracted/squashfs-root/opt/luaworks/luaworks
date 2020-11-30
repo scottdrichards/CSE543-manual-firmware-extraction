@@ -1,0 +1,133 @@
+#!/bin/sh
+
+# Copyright (c) 2010,2011 Logitech, Inc. All Rights Reserved
+#
+# This program is a trade secret of LOGITECH, and it is not to be reproduced,
+# published, disclosed to others, copied, adapted, distributed or displayed
+# without the prior written authorization of LOGITECH.
+#
+# Logitech, the Logitech Logo and Harmony Link are either registered
+# trademarks or trademarks of Logitech in the United States and/or other
+# countries.
+#
+# Licensee agrees to attach or embed this notice on all copies of the program
+# including partial copies or modified versions thereof.
+
+if [ "$1" = "--help" ]; then
+	cat <<EOL
+Usage:
+	$0 --help
+	$0                                 # start all tasks
+	$0 --valgrind                      # run with valgrind
+	$0 --test                          # run all tests
+	$0 --test <task-name> ...          # run selected tests
+	$0 --file=<file-name>              # run a single unit test file (do not enter .lua extension)
+	$0 --task <task-name> ...          # start selected tasks
+	$0 --discoveryServer=<server-name> # override the discovery server url. sample value: svcs-stg04.myharmony.com
+
+EOL
+	exit 1
+fi
+
+#
+# BEWARE if you change this script, it must work in bash, dash and busybox ash
+#
+
+VALGRIND=
+PARAM=
+ARGS=
+HASTASKS=0
+DOFILE=
+
+# additional command switchs (eg --debug)
+for OPT in "$@"; do
+	case $OPT in
+	--valgrind)
+		VALGRIND="valgrind --leak-check=full --track-origins=yes "
+		;;
+	--test)
+		DOTEST=1
+		;;
+	--file)
+		DOFILE=1
+		;;
+	--task)
+		DOTASK=1
+		;;
+	--*)
+		ARGS="${ARGS}${OPT} "
+		;;
+	*)
+		PARAM="${PARAM}${OPT} "
+		;;
+	esac
+done
+
+if [ -d $PWD/build/ ]; then
+	# development builds
+	export LUA_CPATH=$PWD/build/lib/lua/5.1/?.so
+	export LUA_PATH=$PWD/?.lua\;$PWD/build/share/lua/5.1/?.lua
+	export PATH=$PATH:$PWD/build/libexec
+
+	if [ -x $PWD/build/bin/luajit ]; then
+		LUA=$PWD/build/bin/luajit
+	elif [ -x $PWD/build/bin/lua ]; then
+		LUA=$PWD/build/bin/lua
+	fi
+else
+	# running on target
+	export LUA_CPATH=/opt/lib/?.so
+	export LUA_PATH=/opt/luaworks/?.lua\;/opt/share/lua/5.1/?.lua
+	export PATH=$PATH:/opt/libexec
+
+	LUA=/usr/bin/lua
+fi
+
+if [ ! -x $LUA ]; then
+	echo "Error: No Lua executable found"
+	exit 1
+fi
+
+if [ $DOTEST ]; then
+	ARGS="$ARGS works/runtests.lua"
+	HASTASKS=1
+	HASTESTS=0
+
+	for OPT in $PARAM; do
+		HASTESTS=1
+		ARGS="${ARGS} --test=tasks/${OPT}test"
+	done
+
+	if [ $HASTESTS = 0 ]; then
+		ARGS="$ARGS --test=tasks"
+	fi
+
+elif [ $DOFILE ]; then
+	ARGS="$ARGS works/runtests.lua"
+	ARGS="${ARGS} --test=$PARAM"
+	HASTASKS=1
+
+elif [ $DOTASK ]; then
+	for OPT in ${PARAM}; do
+		HASTASKS=1
+		ARGS="${ARGS} tasks/${OPT}"
+	done
+fi
+
+if [ $HASTASKS = 0 ]; then
+	for DIR in tasks/*; do
+		case $DIR in
+		*test)
+			# skip tests
+			;;
+		tasks/examples)
+			# skip examples
+			;;
+		*)
+			ARGS="$ARGS $DIR"
+		esac
+	done
+fi
+
+echo $VALGRIND $LUA main.lua $ARGS
+exec $VALGRIND $LUA main.lua $ARGS

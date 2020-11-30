@@ -1,0 +1,3 @@
+# Aliases extracted from modules themselves.
+alias usb:v*p*d*dc*dsc*dp*ic09isc*ip* usbcore
+alias usb:v*p*d*dc09dsc*dp*ic*isc*ip* usbcore

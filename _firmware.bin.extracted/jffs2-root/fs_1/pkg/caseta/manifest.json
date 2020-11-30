@@ -1,0 +1,8 @@
+{
+	"package": "caseta",
+	"displayName": "Caseta",
+	"productId": "2004",
+	"version": "1.3.2",
+	"installer": "update.sh",
+	"plugin": "tasks/automation/plugins/caseta"
+}

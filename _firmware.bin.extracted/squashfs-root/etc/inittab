@@ -1,0 +1,7 @@
+# This is run first except when booting in single-user mode.
+#
+::sysinit:/etc/init.d/rcS
+
+# Stuff to do before rebooting
+#
+::ctrlaltdel:/sbin/reboot

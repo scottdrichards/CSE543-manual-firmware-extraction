@@ -1,0 +1,62 @@
+#!/bin/sh
+
+#Monitor Network and reassociate if network is down
+
+var="alive!"
+retry=0
+gw_ping=0
+while [ true ]
+do
+	#Check Status
+	status=`wpa_cli status | grep wpa_state | cut -f2 -d"="`
+
+	# Check every 10s if inactive
+	if [ "$status" = "INACTIVE" ]; then
+		sleep 10
+		continue
+	fi
+
+	#Check if wifi status is completed
+	if [ "$status" = "COMPLETED" ]; then
+		if [ "$disc_flag" = "1" ]; then
+			disc_flag=0
+			continue
+		fi
+
+		gateway=`route -n | awk '{if($1=="0.0.0.0") print $2}'`
+		if [ "$gateway" = "" ]; then
+			disc_flag=0
+			sleep 30
+			continue
+		fi
+
+		#ping gateway to check the connection
+		var=`ping "$gateway"| grep "is alive" | /usr/bin/cut -f3 -d" "`
+
+		if [ "$var" = "alive!" ]; then
+				retry=0
+				gw_ping=1
+		else
+			retry=$((retry+1))
+
+			if [ "$retry" -lt 5 ]; then
+				continue
+			fi
+
+			#Break if gateway ping is not possible
+			if [ "$gw_ping" = "0" ]; then
+				break
+			# Reassociate if NW is connected but unable to ping gateway
+			# for 5 times
+			elif [ "$gw_ping" = "1" ]; then
+				wpa_cli reassociate
+				retry=0
+				disc_flag=1
+			fi
+			continue
+		fi
+	elif [ "$status" = "DISCONNECTED" ] && [ "$disc_flag" = "0" ]; then
+		disc_flag=1
+	fi
+	sleep 30
+done

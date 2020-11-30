@@ -1,0 +1,14 @@
+asf.ko:
+cc2544.ko:
+ath_hal.ko: adf.ko asf.ko
+ath_i2s.ko:
+ath_rate_atheros.ko:
+adf.ko:
+ath_dev.ko: ath_rate_atheros.ko ath_hal.ko asf.ko adf.ko
+athrs_gmac.ko:
+art.ko:
+umac.ko: ath_dev.ko ath_rate_atheros.ko ath_hal.ko adf.ko asf.ko
+kernel/drivers/usb/gadget/gadgetfs.ko: kernel/drivers/usb/gadget/ath_udc.ko
+kernel/drivers/usb/gadget/ath_udc.ko:
+kernel/drivers/usb/host/ehci-hcd.ko: kernel/drivers/usb/core/usbcore.ko
+kernel/drivers/usb/core/usbcore.ko:

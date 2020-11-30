@@ -1,0 +1,14 @@
+[update] Deleting:
+[update] /mnt/data/bin
+[update] /mnt/data/lib
+[update] /mnt/data/opt
+[update] /mnt/data/sbin
+[update] /mnt/data/usr
+[update] Installing: /mnt/cache/ota-update.zip
+[update] Writing: uImage.bin to mtd:kernel
+[update] sha1 verified
+[update] Writing: harmony-image.squashfs to mtd:root
+[update] sha1 verified
+[update] Syncing:
+[update] Rename: /mnt/cache/ota-update.zip to /mnt/cache/ota-update-complete.zip
+[update] Done!

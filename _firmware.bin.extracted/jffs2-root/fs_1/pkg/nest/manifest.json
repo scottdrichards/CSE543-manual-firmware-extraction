@@ -1,0 +1,8 @@
+{
+	"package": "nest",
+	"displayName": "Nest",
+	"productId": "2002",
+	"version": "1.1.4",
+	"installer": "update.sh",
+	"plugin": "tasks/automation/plugins/nest"
+}

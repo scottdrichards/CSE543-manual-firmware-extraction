@@ -1,0 +1,114 @@
+#!/bin/sh
+
+# initialize the system
+mount -a
+
+# set hostname
+hostname -F /etc/hostname
+
+# populate volatile
+for dir in cache lock log run tmp watchdog dbus; do
+    if [ ! -d /var/volatile/$dir ]; then
+	mkdir /var/volatile/$dir
+    fi
+done
+
+# logging
+/sbin/syslogd -C256
+/sbin/klogd
+
+# load kernel modules
+load_modules () {
+	libmodules=/lib/modules/$(uname -r)
+	(cat $1; echo; ) |
+	while read module args
+	do
+            case "$module" in
+			\#*|"") continue ;;
+		esac
+		echo "Loading module $module"
+		/sbin/insmod $libmodules/${module}.ko $args
+	done
+}
+
+if [ -e /etc/modules ]; then
+	load_modules /etc/modules
+fi
+
+# bring up loopback interface
+ifup lo
+
+# product specific configuration
+if [ -x /etc/init.d/rcS.local ]; then
+	source /etc/init.d/rcS.local
+fi
+
+# ssh (dropbear for development)
+if [ -r /etc/tdeenable -a -x /usr/sbin/dropbear ]; then
+    if [ ! -r /etc/dropbear/dropbear_rsa_host_key ]; then
+	/usr/sbin/dropbearkey -t rsa -f /etc/dropbear/dropbear_rsa_host_key
+    fi
+
+    /usr/sbin/dropbear
+fi
+
+# following processes include crash reporting
+export LD_PRELOAD=/lib/libcrashlog.so
+
+# Watchdog
+if [ -x /usr/bin/watchdog -a ! -e /etc/nowatchdog ]; then
+	/usr/bin/watchdog
+fi
+
+# DBUS
+if [ -x /usr/bin/dbus-daemon ]; then
+	mkdir /var/run/dbus
+	/usr/bin/dbus-uuidgen --ensure
+	/usr/bin/dbus-daemon --system
+fi
+
+# Bluetooth
+if [ -e /sys/class/bluetooth/hci0 ]; then
+	/usr/sbin/hciconfig hci0 up
+	# enable simple secure pairing
+	/usr/sbin/hciconfig hci0 sspmode 1
+	# enable extended features
+	/usr/bin/hcitool -i hci0 cmd 0x03 0x0056 1
+	/usr/bin/hcitool -i hci0 cmd 0x03 0x006D 1 1
+	/usr/bin/hcitool -i hci0 cmd 0x04 0x0004 1
+	/usr/sbin/bluetoothd
+	/bin/sleep 1
+fi
+
+# HAL
+if [ "$DEMO_MODE" != 1 -a -x /usr/bin/hal ]; then
+	/usr/bin/hal -f -s
+fi
+
+# bring up other networks (in background)
+ifup -a &
+
+# usbhid
+if [ -x /usr/bin/usbhid ]; then
+	/usr/bin/usbhid -s &
+fi
+
+# luaworks (share common /data folder)
+if [ -x /opt/luaworks/luaworks ]; then
+	(cd /opt/luaworks && ./luaworks --syslog --datadir=/data &)
+fi
+
+# luadraws (share common /data folder)
+if [ -x /opt/luadraws/luadraws ]; then
+	(cd /opt/luadraws && ./luadraws --syslog --datadir=/data &)
+fi
+
+# remove ota.zip
+if [ -e /cache/ota-update-complete.zip ]; then
+	echo "Remove ota image"
+	rm /cache/ota-update-complete.zip
+fi
+
+# TODO
+# - ldconfig (refresh cache if needed)
+# - urandom state

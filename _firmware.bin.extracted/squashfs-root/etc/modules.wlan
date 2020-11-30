@@ -1,0 +1,7 @@
+# /etc/modules: wlan modules to load at boot time.
+asf
+adf
+ath_hal
+ath_rate_atheros
+ath_dev
+umac
