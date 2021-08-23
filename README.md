@@ -96,11 +96,7 @@ This still did not get the SPI connection working. I remembered that the Arduino
 
 
 
-As I was going to throw in the towel and accept defeat, I decided to go beyond my comfort level and remove the chip from the board. I got my heat gun and applied a steady amount of heat until I unseated the chip rather cleanly.
-
-
-
-<figure class="wp-block-image size-large"><img src="./images/image5.png" alt="" class="wp-image-46"/><figcaption>The chip has been removed! A capacitor and a transistor went with it while a resister wiggled out of place, but hopefully it can be fixed ample application of flux</figcaption></figure>
+As I was going to throw in the towel and accept defeat, I decided to go beyond my comfort level and remove the chip from the board. I got my heat gun and applied a steady amount of heat until I unseated the chip rather cleanly. A capacitor and a transistor went with it while a resister wiggled out of place, but hopefully it can be fixed ample application of flux
 
 
 
