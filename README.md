@@ -39,11 +39,11 @@ The first step is to expose the logic board by removing the plastic covering.
 
 
 
-<figure class="wp-block-image size-large"><img src="https://blog.scottdrichards.com/wp-content/uploads/2020/11/IMG_4795.jpg" alt="" class="wp-image-43"/><figcaption>This is the top of the board, the chip in the lower middle is the EEPROM where the firmware is loaded from at boot.</figcaption></figure>
+<figure class="wp-block-image size-large"><img src="./images/image2.jpeg" alt="" class="wp-image-43"/><figcaption>This is the top of the board, the chip in the lower middle is the EEPROM where the firmware is loaded from at boot.</figcaption></figure>
 
 
 
-<figure class="wp-block-image size-large"><img src="https://blog.scottdrichards.com/wp-content/uploads/2020/11/IMG_4796.jpg" alt="" class="wp-image-44"/><figcaption>This is the underside of the board. The square chip is the CPU, the rectangular chip is the RAM and the pads on the right are for debugging.</figcaption></figure>
+<figure class="wp-block-image size-large"><img src="./images/image3.jpeg" alt="" class="wp-image-44"/><figcaption>This is the underside of the board. The square chip is the CPU, the rectangular chip is the RAM and the pads on the right are for debugging.</figcaption></figure>
 
 
 
@@ -51,7 +51,7 @@ After removing the case, I starting following traces and doing continuity testin
 
 
 
-<figure class="wp-block-image size-large"><img src="https://blog.scottdrichards.com/wp-content/uploads/2020/11/Mapping-01.jpg" alt="" class="wp-image-45"/></figure>
+<figure class="wp-block-image size-large"><img src="./images/image4.png" alt="" class="wp-image-45"/></figure>
 
 
 
@@ -100,7 +100,7 @@ As I was going to throw in the towel and accept defeat, I decided to go beyond m
 
 
 
-<figure class="wp-block-image size-large"><img src="https://blog.scottdrichards.com/wp-content/uploads/2020/11/2020-11-28-20.41.14.jpg" alt="" class="wp-image-46"/><figcaption>The chip has been removed! A capacitor and a transistor went with it while a resister wiggled out of place, but hopefully it can be fixed ample application of flux</figcaption></figure>
+<figure class="wp-block-image size-large"><img src="./images/image5.png" alt="" class="wp-image-46"/><figcaption>The chip has been removed! A capacitor and a transistor went with it while a resister wiggled out of place, but hopefully it can be fixed ample application of flux</figcaption></figure>
 
 
 
@@ -108,7 +108,7 @@ I then as able to solder the SPI wires to the chip and connect it to the Raspber
 
 
 
-<figure class="wp-block-image size-large"><img src="https://blog.scottdrichards.com/wp-content/uploads/2020/11/2020-11-28-20.47.13.jpg" alt="" class="wp-image-47"/></figure>
+<figure class="wp-block-image size-large"><img src="./images/image5.png" alt="" class="wp-image-47"/></figure>
 
 
 
@@ -161,7 +161,7 @@ With the firmware extracted, I used <a href="http://binvis.io">binvis.io</a> to 
 
 
 
-<figure class="wp-block-image size-large is-resized"><img src="https://blog.scottdrichards.com/wp-content/uploads/2020/11/firmware2-256x1024.png" alt="" class="wp-image-49" width="181" height="724"/></figure>
+<figure class="wp-block-image size-large is-resized"><img src="./images/image6.png" alt="" class="wp-image-49" width="181" height="724"/></figure>
 
 
 
